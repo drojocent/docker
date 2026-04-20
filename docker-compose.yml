@@ -1,0 +1,86 @@
+services:
+  postgres-wod:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: woddb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5433:5432"  
+    volumes:
+      - postgres_wod_data:/var/lib/postgresql/data
+    networks:
+      - wodtracker-network
+
+  postgres-user:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: userdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5434:5432"  
+    volumes:
+      - postgres_user_data:/var/lib/postgresql/data
+    networks:
+      - wodtracker-network
+
+  wod-service:
+    image: ghcr.io/drojocent/wodtracker-wod-service:latest
+    ports:
+      - "8081:8081"
+    depends_on:
+      - postgres-wod
+    environment:
+      POSTGRES_HOST: postgres-wod
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: woddb
+      POSTGRES_USERNAME: postgres
+      POSTGRES_PASSWORD: password
+      JWT_SECRET: "${JWT_SECRET}"
+    networks:
+      - wodtracker-network
+
+  user-service:
+    image: ghcr.io/drojocent/wodtracker-user-service:latest
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres-user
+    environment:
+      POSTGRES_HOST: postgres-user
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: userdb
+      POSTGRES_USERNAME: postgres
+      POSTGRES_PASSWORD: password
+      JWT_SECRET: "${JWT_SECRET}"
+    networks:
+      - wodtracker-network
+
+  frontend:
+    image: ghcr.io/drojocent/wodtracker-frontend:latest
+    ports:
+      - "3000:80"
+    depends_on:
+      - wod-service
+      - user-service
+    networks:
+      - wodtracker-network
+
+  adminer:
+    image: adminer:latest
+    ports:
+      - "8082:8080"
+    depends_on:
+      - postgres-user
+      - postgres-wod
+    networks:
+      - wodtracker-network
+
+volumes:
+  postgres_wod_data:
+  postgres_user_data:
+
+networks:
+  wodtracker-network:
+    driver: bridge
