@@ -27,6 +27,9 @@ services:
 
   wod-service:
     image: ghcr.io/drojocent/wodtracker-wod-service:latest
+    build:
+      context: https://github.com/drojocent/wodtracker-wod-service.git#main
+      dockerfile: Dockerfile
     ports:
       - "8081:8081"
     depends_on:
@@ -43,6 +46,9 @@ services:
 
   user-service:
     image: ghcr.io/drojocent/wodtracker-user-service:latest
+    build:
+      context: https://github.com/drojocent/wodtracker-user-service.git#main
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
     depends_on:
@@ -59,6 +65,9 @@ services:
 
   frontend:
     image: ghcr.io/drojocent/wodtracker-frontend:latest
+    build:
+      context: https://github.com/drojocent/wodtracker-frontend.git#main
+      dockerfile: Dockerfile
     ports:
       - "3000:80"
     depends_on:
