@@ -47,6 +47,7 @@ services:
       - "8080:8080"
     depends_on:
       - postgres-user
+      - mailpit
     environment:
       POSTGRES_HOST: postgres-user
       POSTGRES_PORT: 5432
@@ -54,6 +55,9 @@ services:
       POSTGRES_USERNAME: postgres
       POSTGRES_PASSWORD: password
       JWT_SECRET: "${JWT_SECRET}"
+      MAIL_HOST: mailpit
+      MAIL_PORT: 1025
+      MAIL_FROM: noreply@wodtracker.com
     networks:
       - wodtracker-network
 
@@ -74,6 +78,14 @@ services:
     depends_on:
       - postgres-user
       - postgres-wod
+    networks:
+      - wodtracker-network
+
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      - "8025:8025"
+      - "1025:1025"
     networks:
       - wodtracker-network
 
