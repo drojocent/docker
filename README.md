@@ -9,8 +9,6 @@ Configuración Docker Compose para desplegar la stack completa de WODTracker con
 | Frontend | 3000 | Aplicación Vue.js (Nginx) |
 | User Service | 8080 | API de usuarios y autenticación |
 | WOD Service | 8081 | API de WODs y entrenamientos |
-| PostgreSQL (WOD) | 5433 | Base de datos de WODs |
-| PostgreSQL (User) | 5434 | Base de datos de usuarios |
 | Adminer | 8082 | Gestor web de bases de datos |
 | Mailpit | 8025/1025 | Testing de emails |
 
